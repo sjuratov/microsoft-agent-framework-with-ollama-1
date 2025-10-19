@@ -10,7 +10,8 @@ from orchestration.models import CompletionReason, IterationSession
 def is_approved(reviewer_response: str) -> bool:
     """Check if reviewer approved the slogan.
     
-    Looks for "SHIP IT!" phrase (case-insensitive) in the reviewer's response.
+    Looks for "SHIP IT!" as a standalone phrase or at the start of response.
+    More strict than just searching anywhere to avoid false positives.
     
     Args:
         reviewer_response: The reviewer's feedback text
@@ -21,8 +22,21 @@ def is_approved(reviewer_response: str) -> bool:
     if not reviewer_response:
         return False
     
-    # Case-insensitive search for "ship it"
-    return bool(re.search(r'\bship\s+it\b', reviewer_response, re.IGNORECASE))
+    # Normalize response: strip whitespace and convert to lowercase
+    normalized = reviewer_response.strip().lower()
+    
+    # Check if response STARTS with "ship it" (most reliable indicator)
+    if normalized.startswith("ship it"):
+        return True
+    
+    # Check if "ship it!" appears on its own line (strong indicator)
+    lines = [line.strip() for line in normalized.split('\n')]
+    for line in lines:
+        # Match lines that are exactly "ship it" or "ship it!" with optional punctuation
+        if re.match(r'^ship\s+it[!.]*$', line):
+            return True
+    
+    return False
 
 
 def should_continue_iteration(
