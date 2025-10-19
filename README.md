@@ -219,6 +219,43 @@ mypy src/
 ollama serve
 ```
 
+### Model Validation Errors (String Too Long)
+
+```text
+❌ Workflow Error: 2 validation errors for Turn
+slogan: String should have at most 500 characters
+feedback: String should have at most 1000 characters
+```
+
+**Cause**: Smaller models (1B-2B parameters) like `gemma3:1b` may not follow instructions well and generate verbose output instead of concise slogans.
+
+**Solution**: Use a larger, more instruction-following model:
+
+```bash
+# Recommended: Use mistral (7B parameters)
+slogan-gen generate "coffee shop" --model mistral:latest
+
+# Or use phi3:mini (3.8B parameters)
+slogan-gen generate "coffee shop" --model phi3:mini
+```
+
+**Why this happens**: Smaller models sometimes:
+
+- Generate explanations instead of just the slogan
+- Provide overly detailed feedback with examples
+- Don't follow the "concise output" instructions
+
+**Model Recommendations by Use Case**:
+
+| Model | Size | Instruction Following | Best For |
+|-------|------|----------------------|----------|
+| gemma2:2b | 2B | Fair | Quick testing only |
+| phi3:mini | 3.8B | Good | Development |
+| mistral:latest | 7B | Excellent | Production (default) |
+| llama3.2:latest | 8B | Excellent | High quality output |
+
+**Note**: The validation limits (500 chars for slogans, 1000 chars for feedback) are intentionally strict to enforce quality. This is working as designed.
+
 ### Model Not Found
 
 ```text
