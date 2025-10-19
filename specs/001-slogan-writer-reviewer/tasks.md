@@ -73,8 +73,8 @@
 - [x] T029 [US1] Add error handling in src/cli/main.py for model not found errors with available models list
 - [x] T030 [P] [US1] Create src/cli/\_\_init\_\_.py
 - [x] T031 [US1] Update pyproject.toml to add [project.scripts] entry for `slogan-gen` CLI command
-- [ ] T032 [US1] Create tests/unit/test_workflow.py to test is_approved() and should_continue_iteration() logic
-- [ ] T033 [P] [US1] Create tests/integration/test_end_to_end.py with mocked Ollama responses for full workflow validation
+- [x] T032 [US1] Create tests/unit/test_workflow.py to test is_approved() and should_continue_iteration() logic
+- [x] T033 [P] [US1] Create tests/integration/test_end_to_end.py with mocked Ollama responses for full workflow validation
 
 **Checkpoint**: User Story 1 complete - users can generate slogans via CLI with basic output
 
