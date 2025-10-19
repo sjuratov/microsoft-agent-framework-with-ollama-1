@@ -20,13 +20,13 @@
 
 **Purpose**: Project initialization and basic structure per plan.md
 
-- [ ] T001 Create project directory structure: src/{agents,orchestration,cli,config}/, tests/{unit,integration}/
-- [ ] T002 Initialize Python project with uv: create pyproject.toml with dependencies (agent-framework, ollama, click, pydantic, pydantic-settings)
-- [ ] T003 [P] Create .python-version file with Python 3.11+ requirement
-- [ ] T004 [P] Configure Ruff for linting in pyproject.toml (line-length=100, extend-select=["I", "N", "UP"])
-- [ ] T005 [P] Configure mypy for type checking in pyproject.toml (strict=true, python_version="3.11")
-- [ ] T006 [P] Create README.md with project overview, installation instructions, and quick start examples
-- [ ] T007 [P] Create .gitignore for Python (venv, **pycache**, .env, etc.)
+- [x] T001 Create project directory structure: src/{agents,orchestration,cli,config}/, tests/{unit,integration}/
+- [x] T002 Initialize Python project with uv: create pyproject.toml with dependencies (agent-framework, ollama, click, pydantic, pydantic-settings)
+- [x] T003 [P] Create .python-version file with Python 3.11+ requirement
+- [x] T004 [P] Configure Ruff for linting in pyproject.toml (line-length=100, extend-select=["I", "N", "UP"])
+- [x] T005 [P] Configure mypy for type checking in pyproject.toml (strict=true, python_version="3.11")
+- [x] T006 [P] Create README.md with project overview, installation instructions, and quick start examples
+- [x] T007 [P] Create .gitignore for Python (venv, **pycache**, .env, etc.)
 
 ---
 
@@ -36,14 +36,14 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T008 [P] Implement CompletionReason enum in src/orchestration/models.py
-- [ ] T009 [P] Implement AgentRole enum in src/orchestration/models.py
-- [ ] T010 [P] Implement Turn model in src/orchestration/models.py with validation (turn_number 1-10, slogan max 500 chars)
-- [ ] T011 Implement IterationSession model in src/orchestration/models.py with add_turn() and complete() methods
-- [ ] T012 [P] Implement WorkflowMessage model in src/orchestration/models.py
-- [ ] T013 [P] Implement OllamaConfig settings in src/config/settings.py with BaseSettings and SLOGAN_ env prefix
-- [ ] T014 [P] Create src/config/\_\_init\_\_.py to export OllamaConfig
-- [ ] T015 [P] Create src/orchestration/\_\_init\_\_.py to export models
+- [x] T008 [P] Implement CompletionReason enum in src/orchestration/models.py (approved, max_turns, error)
+- [x] T009 [P] Implement AgentRole enum in src/orchestration/models.py
+- [x] T010 [P] Implement Turn model in src/orchestration/models.py with validation (turn_number 1-10, slogan max 500 chars)
+- [x] T011 Implement IterationSession model in src/orchestration/models.py with add_turn() and complete() methods
+- [x] T012 [P] Implement WorkflowMessage model in src/orchestration/models.py
+- [x] T013 [P] Implement OllamaConfig settings in src/config/settings.py with BaseSettings and SLOGAN_ env prefix
+- [x] T014 [P] Create src/config/\_\_init\_\_.py to export OllamaConfig
+- [x] T015 [P] Create src/orchestration/\_\_init\_\_.py to export models
 
 **Checkpoint**: Foundation ready - all data models available for user story implementation
 
@@ -57,22 +57,22 @@
 
 ### Implementation for User Story 1
 
-- [ ] T016 [P] [US1] Implement Writer agent in src/agents/writer.py using ChatAgent with OpenAIChatClient (base_url=<http://localhost:11434/v1>)
-- [ ] T017 [P] [US1] Implement Reviewer agent in src/agents/reviewer.py using ChatAgent with OpenAIChatClient
-- [ ] T018 [P] [US1] Create src/agents/\_\_init\_\_.py to export writer and reviewer creation functions
-- [ ] T019 [US1] Implement approval detection function is_approved() in src/orchestration/workflow.py (check for "ship it" case-insensitive)
-- [ ] T020 [US1] Implement should_continue_iteration() condition in src/orchestration/workflow.py (check turn count and approval status)
+- [x] T016 [P] [US1] Implement Writer agent in src/agents/writer.py using ChatAgent with OpenAIChatClient (base_url=<http://localhost:11434/v1>)
+- [x] T017 [P] [US1] Implement Reviewer agent in src/agents/reviewer.py using ChatAgent with OpenAIChatClient
+- [x] T018 [P] [US1] Create src/agents/\_\_init\_\_.py to export writer and reviewer creation functions
+- [x] T019 [US1] Implement approval detection function is_approved() in src/orchestration/workflow.py (check for "ship it" case-insensitive)
+- [x] T020 [US1] Implement should_continue_iteration() condition in src/orchestration/workflow.py (check turn count and approval status)
 - [ ] T021 [US1] Implement build_slogan_workflow() in src/orchestration/workflow.py using WorkflowBuilder (Writer → Reviewer → conditional edge)
-- [ ] T022 [US1] Implement run_slogan_generation() orchestrator in src/orchestration/workflow.py (creates session, runs workflow, returns final result)
-- [ ] T023 [P] [US1] Create src/orchestration/\_\_init\_\_.py to export run_slogan_generation
-- [ ] T024 [US1] Implement CLI entry point in src/cli/main.py with Click group and --version option
-- [ ] T025 [US1] Implement `generate` command in src/cli/main.py with INPUT argument and --model option (default: llama2)
-- [ ] T026 [US1] Implement basic output formatting in src/cli/output.py for final slogan display (non-verbose format)
-- [ ] T027 [US1] Add error handling in src/cli/main.py for empty input validation
-- [ ] T028 [US1] Add error handling in src/cli/main.py for Ollama connection errors with helpful messages
-- [ ] T029 [US1] Add error handling in src/cli/main.py for model not found errors with available models list
-- [ ] T030 [P] [US1] Create src/cli/\_\_init\_\_.py
-- [ ] T031 [US1] Update pyproject.toml to add [project.scripts] entry for `slogan-gen` CLI command
+- [x] T022 [US1] Implement run_slogan_generation() orchestrator in src/orchestration/workflow.py (creates session, runs workflow, returns final result)
+- [x] T023 [P] [US1] Create src/orchestration/\_\_init\_\_.py to export run_slogan_generation
+- [x] T024 [US1] Implement CLI entry point in src/cli/main.py with Click group and --version option
+- [x] T025 [US1] Implement `generate` command in src/cli/main.py with INPUT argument and --model option (default: llama2)
+- [x] T026 [US1] Implement basic output formatting in src/cli/output.py for final slogan display (non-verbose format)
+- [x] T027 [US1] Add error handling in src/cli/main.py for empty input validation
+- [x] T028 [US1] Add error handling in src/cli/main.py for Ollama connection errors with helpful messages
+- [x] T029 [US1] Add error handling in src/cli/main.py for model not found errors with available models list
+- [x] T030 [P] [US1] Create src/cli/\_\_init\_\_.py
+- [x] T031 [US1] Update pyproject.toml to add [project.scripts] entry for `slogan-gen` CLI command
 - [ ] T032 [US1] Create tests/unit/test_workflow.py to test is_approved() and should_continue_iteration() logic
 - [ ] T033 [P] [US1] Create tests/integration/test_end_to_end.py with mocked Ollama responses for full workflow validation
 
