@@ -4,7 +4,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class CompletionReason(str, Enum):
@@ -31,10 +31,8 @@ class Turn(BaseModel):
     approved: bool = Field(default=False, description="Approval status")
     timestamp: datetime = Field(default_factory=datetime.now, description="Turn creation time")
 
-    class Config:
-        """Pydantic configuration."""
-
-        json_schema_extra = {
+    model_config = ConfigDict(
+        json_schema_extra={
             "example": {
                 "turn_number": 1,
                 "slogan": "Eco-Smart: Where Green Meets Hydration",
@@ -43,6 +41,7 @@ class Turn(BaseModel):
                 "timestamp": "2025-10-19T14:30:00",
             }
         }
+    )
 
 
 class IterationSession(BaseModel):
