@@ -22,9 +22,9 @@ class TestIsApproved:
         """Should detect 'ShIp It!' with mixed case."""
         assert is_approved("ShIp It!") is True
 
-    def test_with_surrounding_text(self):
-        """Should detect 'ship it' within longer feedback."""
-        feedback = "This is excellent work! Ship it! Great job on the slogan."
+    def test_with_surrounding_text_after(self):
+        """Should detect 'ship it' at start with text after."""
+        feedback = "Ship it! This is excellent work. Great job on the slogan."
         assert is_approved(feedback) is True
 
     def test_with_extra_spaces(self):
@@ -32,16 +32,23 @@ class TestIsApproved:
         assert is_approved("ship  it!") is True
 
     def test_without_exclamation(self):
-        """Should detect 'ship it' even without exclamation mark."""
-        assert is_approved("This looks good, ship it") is True
+        """Should detect 'ship it' even without exclamation mark when starting."""
+        assert is_approved("ship it") is True
 
     def test_at_start_of_text(self):
         """Should detect 'ship it' at the beginning."""
         assert is_approved("Ship it! This is perfect.") is True
 
-    def test_at_end_of_text(self):
-        """Should detect 'ship it' at the end."""
-        assert is_approved("Looks great, ship it!") is True
+    def test_on_own_line(self):
+        """Should detect 'ship it' when on its own line."""
+        assert is_approved("Great feedback here.\n\nSHIP IT!") is True
+        assert is_approved("Some feedback\n\nship it!\n") is True
+
+    def test_not_approved_at_end_after_feedback(self):
+        """Should NOT approve when 'ship it' is at end of feedback paragraph."""
+        # This is the bug we fixed - should not approve
+        assert is_approved("Looks great, ship it!") is False
+        assert is_approved("This is excellent work! Ship it! Great job.") is False
 
     def test_not_approved_similar_words(self):
         """Should not match similar but different words."""

@@ -168,13 +168,14 @@ class TestEndToEndWorkflow:
 
     @pytest.mark.asyncio
     async def test_approval_detection_case_insensitive(self):
-        """Test that approval detection is case-insensitive."""
+        """Test that approval detection is case-insensitive and position-aware."""
         test_cases = [
             "SHIP IT!",
             "ship it!",
             "Ship It!",
-            "This is great, SHIP IT!",
-            "ship   it! Perfect!",
+            "SHIP IT! This is great.",  # Starting position
+            "ship it",  # Without exclamation at start
+            "Great work.\n\nSHIP IT!",  # On own line
         ]
 
         for approval_phrase in test_cases:
