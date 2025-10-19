@@ -1,50 +1,97 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+SYNC IMPACT REPORT
+==================
+Version: 0.0.0 → 1.0.0
+Change Type: MAJOR (Initial constitution creation)
+Ratification Date: 2025-10-19
+
+Modified/Added Principles:
+- ✅ Added: I. Code Quality - Ensures maintainability through reviews, documentation, and standards
+- ✅ Added: II. Simplicity - Prevents over-engineering and keeps codebase approachable
+
+Added Sections:
+- ✅ Development Workflow Requirements - Lightweight process ensuring quality gates
+
+Templates Status:
+- ✅ plan-template.md - Compatible (Constitution Check section already present)
+- ✅ spec-template.md - Compatible (User scenarios and testing alignment maintained)
+- ✅ tasks-template.md - Compatible (Task organization supports incremental development)
+
+Follow-up TODOs: None
+==================
+-->
+
+# Microsoft Agent Framework with Ollama Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Code Quality
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**All code MUST meet high-quality standards to ensure maintainability and reliability.**
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+- Every code change requires peer review before merge
+- All features and public APIs MUST have clear, up-to-date documentation
+- Code MUST follow established style guides and pass linting checks
+- Complex logic MUST include inline comments explaining the "why"
+- Breaking changes MUST be documented with migration guides
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: Building an agentic solution requires reliable, maintainable code that the team can confidently evolve. Poor code quality leads to technical debt that hampers innovation and increases maintenance burden.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### II. Simplicity
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Favor simple, clear solutions over clever or complex ones.**
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+- Start with the simplest solution that meets requirements (YAGNI principle)
+- Avoid premature optimization and over-engineering
+- Prefer composition over inheritance; explicit over implicit
+- If a feature requires extensive explanation, reconsider the design
+- Dependencies MUST be justified; minimize external dependencies
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Simplicity reduces cognitive load, makes debugging easier, and allows faster onboarding. Complex solutions are harder to maintain and more prone to bugs, especially critical in AI agent systems where behavior must be predictable.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow Requirements
+
+**Lightweight process ensuring quality and simplicity gates.**
+
+### Code Review Process
+
+- All changes require at least one peer review
+- Reviewers MUST verify alignment with Code Quality and Simplicity principles
+- PRs should be small and focused (prefer incremental development)
+
+### Documentation Standards
+
+- Every feature MUST have user-facing documentation before merge
+- API changes MUST update relevant documentation in the same PR
+- README.md MUST stay current with setup and usage instructions
+
+### Incremental Development
+
+- Build in small, testable increments
+- Each increment should deliver demonstrable value
+- Favor shipping smaller working features over large incomplete ones
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**This constitution supersedes all other development practices.**
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+### Amendment Process
+
+1. Proposed changes MUST be documented with rationale
+2. Team discussion and consensus required for approval
+3. Version bump per semantic versioning rules (see below)
+4. All dependent templates and docs updated before finalization
+
+### Versioning Policy
+
+- **MAJOR**: Backward incompatible principle removals or redefinitions
+- **MINOR**: New principle/section added or materially expanded guidance
+- **PATCH**: Clarifications, wording, typo fixes, non-semantic refinements
+
+### Compliance
+
+- All PRs and reviews MUST verify compliance with these principles
+- Deviations from principles require explicit justification and approval
+- Periodic constitution reviews (quarterly recommended) to ensure relevance
+
+**Version**: 1.0.0 | **Ratified**: 2025-10-19 | **Last Amended**: 2025-10-19
