@@ -8,12 +8,12 @@ from config.settings import OllamaConfig
 
 def create_reviewer_agent(config: OllamaConfig) -> ChatAgent:
     """Create a Reviewer agent configured with Ollama.
-    
+
     The Reviewer evaluates slogans and provides feedback or approval.
-    
+
     Args:
         config: Ollama configuration settings
-        
+
     Returns:
         Configured ChatAgent instance for reviewing slogans
     """
@@ -22,7 +22,7 @@ def create_reviewer_agent(config: OllamaConfig) -> ChatAgent:
         api_key="ollama",  # Ollama doesn't require real API key
         model_id=config.model_name,
     )
-    
+
     system_prompt = """You are a marketing slogan reviewer with high standards.
 
 Your role:
@@ -40,7 +40,8 @@ Evaluation criteria:
 
 CRITICAL RESPONSE RULES:
 1. If the slogan needs ANY improvement: Provide ONLY feedback. Do NOT include "SHIP IT!" anywhere.
-2. If the slogan is truly excellent and meets ALL criteria: Respond with ONLY "SHIP IT!" (nothing else).
+2. If the slogan is truly excellent and meets ALL criteria: Respond with ONLY "SHIP IT!"
+   (nothing else).
 3. NEVER mix feedback with approval - choose one or the other.
 
 Examples:
@@ -55,5 +56,5 @@ Be thorough in your review. Don't approve mediocre slogans."""
         chat_client=client,
         instructions=system_prompt,
     )
-    
+
     return agent

@@ -36,7 +36,8 @@ class Turn(BaseModel):
             "example": {
                 "turn_number": 1,
                 "slogan": "Eco-Smart: Where Green Meets Hydration",
-                "feedback": "Good start, but focus more on the 'fun' aspect mentioned in the brief.",
+                "feedback": "Good start, but focus more on the 'fun' aspect "
+                "mentioned in the brief.",
                 "approved": False,
                 "timestamp": "2025-10-19T14:30:00",
             }

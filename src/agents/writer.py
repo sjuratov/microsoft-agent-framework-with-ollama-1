@@ -8,12 +8,12 @@ from config.settings import OllamaConfig
 
 def create_writer_agent(config: OllamaConfig) -> ChatAgent:
     """Create a Writer agent configured with Ollama.
-    
+
     The Writer generates creative slogans based on user input and reviewer feedback.
-    
+
     Args:
         config: Ollama configuration settings
-        
+
     Returns:
         Configured ChatAgent instance for writing slogans
     """
@@ -22,7 +22,7 @@ def create_writer_agent(config: OllamaConfig) -> ChatAgent:
         api_key="ollama",  # Ollama doesn't require real API key
         model_id=config.model_name,
     )
-    
+
     system_prompt = """You are a creative slogan writer for marketing campaigns.
 
 Your role:
@@ -32,7 +32,8 @@ Your role:
 - Keep slogans under 100 characters when possible
 - Focus on emotional appeal and memorability
 
-When you receive feedback, carefully revise your slogan to address the reviewer's concerns while maintaining creativity.
+When you receive feedback, carefully revise your slogan to address the reviewer's concerns
+while maintaining creativity.
 
 Output only the slogan text, nothing else."""
 
@@ -40,5 +41,5 @@ Output only the slogan text, nothing else."""
         chat_client=client,
         instructions=system_prompt,
     )
-    
+
     return agent

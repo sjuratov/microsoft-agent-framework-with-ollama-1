@@ -39,12 +39,12 @@ packages = ["src"]
 
 [tool.ruff]
 line-length = 100
-extend-select = ["I", "N", "UP"]
 target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "W"]
 ignore = []
+extend-select = ["I", "N", "UP"]
 
 [tool.mypy]
 python_version = "3.11"

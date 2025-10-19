@@ -18,6 +18,10 @@ The agents iterate up to 10 times (default 5, configurable) until the reviewer a
 - 👀 **Iteration Visibility**: Optional verbose mode to see the collaboration process
 - 🎨 **Model Selection**: Choose different Ollama models for varied creative styles
 - 🚀 **Fast & Local**: Runs entirely on your machine using Ollama
+- ⏱️ **Performance Timing**: Track total duration and per-turn timing in verbose mode
+- 🎨 **Color-Coded Output**: Clear visual feedback with styled terminal output
+- 💾 **Multiple Output Formats**: Save results as text or JSON for integration
+- 🔧 **Model Management**: List available models and validate before generation
 
 ## Prerequisites
 
@@ -39,13 +43,23 @@ curl -fsSL https://ollama.ai/install.sh | sh
 ### 2. Pull a Model
 
 ```bash
-# Default model
-ollama pull llama2
+# Recommended: Fast, lightweight model for quick generation
+ollama pull gemma2:2b
 
-# Or try other models
+# Default: Good balance of speed and quality
 ollama pull mistral
-ollama pull codellama
+
+# Alternative models
+ollama pull llama3.2:latest    # Latest Llama version
+ollama pull phi3:mini          # Microsoft's efficient model
 ```
+
+**Model Performance Tips:**
+
+- **gemma2:2b** or **phi3:mini**: Best for speed (~5-10s total)
+- **mistral**: Good balance of quality and performance (~15-30s total)
+- **llama3.2:latest**: Higher quality, slower (~60s+ total)
+- Models with 7B+ parameters may be slow on CPU-only systems
 
 ### 3. Install the CLI
 
@@ -92,8 +106,41 @@ slogan-gen generate "fitness app" --max-turns 3
 ### Save to File
 
 ```bash
-# Save the result
+# Save as text (default)
 slogan-gen generate "pizza restaurant" --output result.txt
+
+# Save as JSON for programmatic use
+slogan-gen generate "pizza restaurant" --output result.json
+```
+
+**JSON Output Format:**
+
+```json
+{
+  "input": "pizza restaurant",
+  "final_slogan": "🍕 Slice of Heaven, Every Bite!",
+  "completion_reason": "approved",
+  "turn_count": 2,
+  "max_turns": 5,
+  "total_duration_seconds": 5.8,
+  "average_duration_per_turn": 2.9,
+  "turns": [
+    {
+      "turn_number": 1,
+      "slogan": "Pizza Perfection in Every Slice",
+      "feedback": "Good start, but needs more excitement...",
+      "approved": false,
+      "timestamp": "2024-01-15T10:30:00"
+    },
+    {
+      "turn_number": 2,
+      "slogan": "🍕 Slice of Heaven, Every Bite!",
+      "feedback": "SHIP IT! Perfect combination of emoji and excitement.",
+      "approved": true,
+      "timestamp": "2024-01-15T10:30:05"
+    }
+  ]
+}
 ```
 
 ## Configuration
@@ -103,12 +150,15 @@ slogan-gen generate "pizza restaurant" --output result.txt
 Configure defaults using environment variables:
 
 ```bash
-export SLOGAN_BASE_URL="http://localhost:11434/v1"
-export SLOGAN_MODEL_NAME="llama2"
-export SLOGAN_MAX_ITERATIONS=5
-export SLOGAN_TEMPERATURE=0.7
-export SLOGAN_TIMEOUT=120
+export OLLAMA_BASE_URL="http://localhost:11434/v1"
+export OLLAMA_MODEL_NAME="mistral:latest"
+export OLLAMA_MAX_TURNS=5
+export OLLAMA_TEMPERATURE=0.7
+export OLLAMA_MAX_TOKENS=500
+export OLLAMA_TIMEOUT=30
 ```
+
+**Note**: Environment variable names changed from `SLOGAN_*` to `OLLAMA_*` in recent versions.
 
 ### Configuration Commands
 
@@ -183,11 +233,28 @@ ollama pull llama2
 
 ### Slow Generation
 
-If slogan generation is slow, try:
+If slogan generation is slow:
 
-- Using a smaller model (e.g., `llama2` instead of `llama2:70b`)
-- Reducing `--max-turns` to limit iterations
-- Checking your system resources
+**Quick Wins:**
+
+- **Use a smaller model**: `gemma2:2b` (2B params) is 100x+ faster than `llama3:8b`
+- **Reduce max-turns**: Use `--max-turns 3` to limit iterations
+- **Check system resources**: Close other apps, ensure adequate RAM
+
+**Model Size Comparison:**
+
+| Model | Size | Typical Time (2 turns) | Quality |
+|-------|------|----------------------|---------|
+| gemma2:2b | 2B | ~5-10s | Good |
+| phi3:mini | 3.8B | ~10-15s | Very Good |
+| mistral:latest | 7B | ~15-30s | Excellent |
+| llama3:8b | 8B | ~60-120s | Excellent |
+
+**Performance bottleneck**: LLMs are computationally intensive. CPU-only generation is slow for 7B+ models. Consider:
+
+- Using GPU acceleration (NVIDIA/AMD GPU with Ollama CUDA/ROCm support)
+- Switching to a smaller model for development/testing
+- Running on a machine with more cores/RAM
 
 ## Architecture
 
