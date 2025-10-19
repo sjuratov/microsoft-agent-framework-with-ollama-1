@@ -33,7 +33,7 @@ Build a multi-agent CLI application using Microsoft Agent Framework and Ollama t
 
 - Complete slogan generation within 5 minutes
 - Agent response time dependent on Ollama model performance
-- Maximum 5 iteration turns (hard constraint)
+- Maximum 10 iteration turns (default 5, user-configurable 1-10)
 
 **Constraints**:
 

@@ -20,7 +20,7 @@ Represents a single iteration in the Writer-Reviewer collaboration.
 
 | Field | Type | Description | Validation |
 |-------|------|-------------|------------|
-| turn_number | int | Sequence number (1-5) | >= 1, <= 5 |
+| turn_number | int | Sequence number (1-10) | >= 1, <= 10 |
 | slogan | str | Writer's generated slogan | min_length=1, max_length=500 |
 | feedback | str \| None | Reviewer's feedback or approval | Optional, max_length=1000 |
 | approved | bool | Whether reviewer approved | Default: False |
@@ -46,7 +46,7 @@ from pydantic import BaseModel, Field
 class Turn(BaseModel):
     """Represents one iteration turn in the Writer-Reviewer cycle."""
     
-    turn_number: int = Field(..., ge=1, le=5, description="Turn sequence number")
+    turn_number: int = Field(..., ge=1, le=10, description="Turn sequence number")
     slogan: str = Field(..., min_length=1, max_length=500, description="Generated slogan")
     feedback: str | None = Field(None, max_length=1000, description="Reviewer feedback")
     approved: bool = Field(default=False, description="Approval status")
@@ -76,7 +76,7 @@ Represents the complete multi-turn collaboration session.
 |-------|------|-------------|------------|
 | user_input | str | Original user request | min_length=1, max_length=1000 |
 | model_name | str | Ollama model used | non-empty |
-| turns | list[Turn] | All iteration turns | max_length=5 |
+| turns | list[Turn] | All iteration turns | max_length=10 |
 | final_slogan | str \| None | Approved or last slogan | Optional |
 | completed | bool | Session completion status | Default: False |
 | completion_reason | CompletionReason \| None | Why session ended | Optional |
@@ -88,7 +88,7 @@ Represents the complete multi-turn collaboration session.
 - Must have at least 1 turn when completed
 - If completed=True, must have final_slogan and completion_reason
 - turns list must be ordered by turn_number
-- Max 5 turns enforced
+- Max 10 turns enforced (default 5, configurable)
 
 **Pydantic Model**:
 
@@ -99,7 +99,7 @@ from pydantic import BaseModel, Field, field_validator
 class CompletionReason(str, Enum):
     """Reasons for session completion."""
     APPROVED = "approved"  # Reviewer approved with "SHIP IT!"
-    MAX_TURNS = "max_turns"  # Reached 5-turn limit
+    MAX_TURNS = "max_turns"  # Reached maximum turn limit
     ERROR = "error"  # Error occurred
     
 class IterationSession(BaseModel):
@@ -107,7 +107,7 @@ class IterationSession(BaseModel):
     
     user_input: str = Field(..., min_length=1, max_length=1000)
     model_name: str = Field(..., min_length=1)
-    turns: list[Turn] = Field(default_factory=list, max_length=5)
+    turns: list[Turn] = Field(default_factory=list, max_length=10)
     final_slogan: str | None = None
     completed: bool = False
     completion_reason: CompletionReason | None = None

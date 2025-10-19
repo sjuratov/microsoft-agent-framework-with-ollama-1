@@ -17,7 +17,7 @@ A user provides a topic or product description via command line, and the system 
 
 **Acceptance Scenarios**:
 
-1. **Given** the CLI is installed and configured with an Ollama model, **When** user runs the command with input "eco-friendly water bottle", **Then** the system outputs a final approved slogan within the 5-turn limit
+1. **Given** the CLI is installed and configured with an Ollama model, **When** user runs the command with input "eco-friendly water bottle", **Then** the system outputs a final approved slogan within the maximum turn limit
 2. **Given** the agents are collaborating, **When** the reviewer approves a slogan, **Then** the system displays "SHIP IT!" and outputs the final slogan
 3. **Given** the agents are collaborating, **When** the reviewer provides feedback, **Then** the writer creates a new version incorporating that feedback
 
@@ -34,8 +34,8 @@ A user wants to see the iterative process between writer and reviewer agents, in
 **Acceptance Scenarios**:
 
 1. **Given** the user runs the CLI, **When** agents are iterating, **Then** each turn displays: turn number, writer's slogan, and reviewer's feedback
-2. **Given** the iteration reaches turn 5, **When** no approval has been given, **Then** the system outputs the best slogan from the iterations with a message indicating max turns reached
-3. **Given** the reviewer approves before turn 5, **When** "SHIP IT!" is declared, **Then** the system shows total turns taken and final slogan
+2. **Given** the iteration reaches the maximum turn limit, **When** no approval has been given, **Then** the system outputs the best slogan from the iterations with a message indicating max turns reached
+3. **Given** the reviewer approves before reaching max turns, **When** "SHIP IT!" is declared, **Then** the system shows total turns taken and final slogan
 
 ---
 
@@ -59,7 +59,7 @@ A user wants to specify which Ollama model to use for the agents, allowing flexi
 
 - What happens when the user provides empty or very short input (e.g., single word, empty string)?
 - How does the system handle Ollama connection failures or model unavailability?
-- What happens if the reviewer never approves within 5 turns?
+- What happens if the reviewer never approves within the maximum turn limit?
 - How does the system behave if the writer or reviewer produces unexpected output format?
 - What happens when the user interrupts the process mid-iteration (Ctrl+C)?
 
@@ -70,13 +70,13 @@ A user wants to specify which Ollama model to use for the agents, allowing flexi
 - **FR-001**: System MUST accept user input describing the topic/product for slogan generation via command line
 - **FR-002**: System MUST implement a writer agent that generates slogans based on user input and reviewer feedback
 - **FR-003**: System MUST implement a reviewer agent that evaluates slogans and provides critical feedback or approval
-- **FR-004**: System MUST facilitate communication between writer and reviewer agents for up to 5 iteration turns
-- **FR-005**: System MUST terminate iteration when reviewer approves (responds with "SHIP IT!") or when 5 turns are completed
+- **FR-004**: System MUST facilitate communication between writer and reviewer agents for up to 10 iteration turns (default 5, user-configurable 1-10)
+- **FR-005**: System MUST terminate iteration when reviewer approves (responds with "SHIP IT!") or when maximum turns are completed
 - **FR-006**: System MUST output the final approved slogan to the command line
 - **FR-007**: System MUST accept Ollama model name as a configuration parameter
 - **FR-008**: System MUST use the specified Ollama model for both writer and reviewer agents
 - **FR-009**: System MUST display the iterative process including turn numbers, slogans, and feedback
-- **FR-010**: System MUST handle cases where 5 turns are reached without approval by outputting the latest slogan
+- **FR-010**: System MUST handle cases where maximum turns are reached without approval by outputting the latest slogan
 - **FR-011**: System MUST provide clear error messages if Ollama is not available or model is invalid
 - **FR-012**: System MUST be designed with future API extension in mind (architecture should support both CLI and API interfaces)
 
@@ -93,7 +93,7 @@ A user wants to specify which Ollama model to use for the agents, allowing flexi
 ### Measurable Outcomes
 
 - **SC-001**: Users can generate a slogan by providing input via command line and receiving output within 5 minutes
-- **SC-002**: System completes the writer-reviewer iteration cycle within 5 turns or less for 100% of sessions
+- **SC-002**: System completes the writer-reviewer iteration cycle within the configured maximum turns for 100% of sessions
 - **SC-003**: Users can see each iteration step (slogan version and feedback) in the command line output
 - **SC-004**: System successfully handles connection to local Ollama model and gracefully reports errors if unavailable
 - **SC-005**: Users can specify different Ollama models via configuration and observe different agent behaviors
@@ -106,13 +106,13 @@ A user wants to specify which Ollama model to use for the agents, allowing flexi
 - Command line interface will be the only user interface for this iteration (no GUI, web interface, or API)
 - Both agents (writer and reviewer) will use the same Ollama model instance
 - The definition of "approval" is when the reviewer's response contains "SHIP IT!"
-- If 5 turns are exhausted, the last generated slogan is considered the final output
+- If maximum turns are exhausted, the last generated slogan is considered the final output
 - Users have basic familiarity with command line tools
 - The architecture will be modular enough to support future FastAPI integration without major refactoring
 
 ## Constraints *(optional)*
 
-- Maximum 5 iteration turns between writer and reviewer agents (hard limit)
+- Maximum 5 iteration turns between writer and reviewer agents (default limit, configurable 1-10)
 - System must use local Ollama models only (no cloud API calls)
 - Must run on end user's local machine via command line
 - Output must be text-based to the terminal
@@ -122,7 +122,7 @@ A user wants to specify which Ollama model to use for the agents, allowing flexi
 
 - Ollama must be installed and running on the user's system
 - At least one Ollama language model must be available locally
-- Python 3.8+ (assumed for Microsoft Agent Framework)
+- Python 3.11+ (required for async/await and modern type hints)
 - Microsoft Agent Framework library compatibility with Ollama
 
 ## Out of Scope
