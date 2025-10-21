@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from src.api.schemas.responses import RootResponse
-from src.api.routes import health, models
+from src.api.routes import health, models, generate
 
 app = FastAPI(
     title="Slogan Writer-Reviewer API",
@@ -30,6 +30,7 @@ app.add_middleware(
 # Register routers
 app.include_router(health.router)
 app.include_router(models.router)
+app.include_router(generate.router)
 
 
 @app.get("/", response_model=RootResponse, tags=["info"])
