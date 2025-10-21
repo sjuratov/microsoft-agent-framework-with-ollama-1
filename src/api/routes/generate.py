@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from src.api.dependencies import get_config
@@ -125,7 +125,8 @@ def convert_session_to_response(
 
 @router.post("/slogans/generate", response_model=GenerateResponse)
 async def generate_slogan(
-    request: GenerateRequest,
+    request_body: GenerateRequest,
+    request: Request,
     config: OllamaConfig = Depends(get_config),
 ) -> GenerateResponse:
     """
@@ -136,7 +137,8 @@ async def generate_slogan(
     until an acceptable slogan is approved or max iterations reached.
     
     Args:
-        request: Generation request with input, optional model, max_turns, verbose
+        request_body: Generation request with input, optional model, max_turns, verbose
+        request: FastAPI request object (for accessing request_id from middleware)
         config: Injected Ollama configuration
     
     Returns:
@@ -148,18 +150,19 @@ async def generate_slogan(
         HTTPException 500: Generation error
         HTTPException 504: Generation timeout (>600s)
     """
-    request_id = str(uuid4())
+    # Get request ID from middleware (or generate if middleware not active)
+    request_id = getattr(request.state, "request_id", str(uuid4()))
     started_at = datetime.now()
     
     try:
         # Validate model if specified
-        if request.model:
+        if request_body.model:
             try:
                 available_models = get_available_models(base_url=config.base_url, timeout=10)
-                if request.model not in available_models:
+                if request_body.model not in available_models:
                     raise HTTPException(
                         status_code=400,
-                        detail=f"Model '{request.model}' not found. Available models: {', '.join(available_models)}"
+                        detail=f"Model '{request_body.model}' not found. Available models: {', '.join(available_models)}"
                     )
             except HTTPException:
                 # Re-raise HTTPException (our validation error)
@@ -171,16 +174,16 @@ async def generate_slogan(
         
         # Run generation with timeout
         session = await run_generation_async(
-            user_input=request.input,
-            model_name=request.model,
-            max_turns=request.max_turns,
+            user_input=request_body.input,
+            model_name=request_body.model,
+            max_turns=request_body.max_turns,
         )
         
         # Convert to API response
         response = convert_session_to_response(
             session=session,
-            original_input=request.input,
-            verbose=request.verbose,
+            original_input=request_body.input,
+            verbose=request_body.verbose,
             request_id=request_id,
             started_at=started_at,
         )
