@@ -37,3 +37,18 @@ class RootResponse(BaseModel):
     version: str = Field(..., description="API version (semver)")
     description: str = Field(..., description="API description")
     documentation: dict[str, str] = Field(..., description="Documentation links")
+
+
+class ModelInfo(BaseModel):
+    """Information about an available model."""
+
+    name: str = Field(..., description="Model name")
+    display_name: str = Field(..., description="Human-readable model name")
+
+
+class ModelsResponse(BaseModel):
+    """Response schema for models endpoint."""
+
+    models: list[ModelInfo] = Field(..., description="List of available models")
+    default_model: str = Field(..., description="The default model name")
+    count: int = Field(..., ge=0, description="Total number of available models")
