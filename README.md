@@ -143,6 +143,213 @@ slogan-gen generate "pizza restaurant" --output result.json
 }
 ```
 
+## REST API
+
+The application provides a FastAPI REST API for programmatic access to slogan generation.
+
+### Starting the API Server
+
+```bash
+# Start the development server with auto-reload
+uvicorn src.api.main:app --reload
+
+# Production server (with workers)
+uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+The API will be available at `http://localhost:8000`.
+
+### Interactive API Documentation
+
+- **Swagger UI**: <http://localhost:8000/docs>
+- **ReDoc**: <http://localhost:8000/redoc>
+- **OpenAPI Schema**: <http://localhost:8000/openapi.json>
+
+### API Endpoints
+
+#### Root Endpoint
+
+```bash
+curl http://localhost:8000/
+
+# Response
+{
+  "message": "AI Slogan Generator API",
+  "version": "1.0.0",
+  "endpoints": {
+    "health": "/api/v1/health",
+    "models": "/api/v1/models",
+    "generate": "/api/v1/slogans/generate"
+  }
+}
+```
+
+#### Health Check
+
+```bash
+curl http://localhost:8000/api/v1/health
+
+# Response
+{
+  "status": "healthy",
+  "timestamp": "2024-01-15T10:30:00Z",
+  "ollama": {
+    "status": "connected",
+    "base_url": "http://localhost:11434/v1"
+  }
+}
+```
+
+#### List Available Models
+
+```bash
+curl http://localhost:8000/api/v1/models
+
+# Response
+{
+  "models": [
+    {
+      "id": "mistral:latest",
+      "name": "Mistral 7B",
+      "size": "7B",
+      "description": "Fast and capable instruction-following model"
+    }
+  ],
+  "total": 1,
+  "default_model": "mistral:latest"
+}
+```
+
+#### Generate Slogan
+
+```bash
+curl -X POST http://localhost:8000/api/v1/slogans/generate \
+  -H "Content-Type: application/json" \
+  -d '{
+    "input": "coffee shop",
+    "model": "mistral:latest",
+    "max_turns": 5,
+    "verbose": false
+  }'
+
+# Response (streaming disabled)
+{
+  "request_id": "550e8400-e29b-41d4-a716-446655440000",
+  "input": "coffee shop",
+  "final_slogan": "☕ Brew Happiness, One Cup at a Time",
+  "completion_reason": "approved",
+  "turn_count": 2,
+  "max_turns": 5,
+  "total_duration_seconds": 4.2,
+  "model_used": "mistral:latest",
+  "turns": [...]
+}
+```
+
+**Request Parameters:**
+
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `input` | string | Yes | - | Business/product description (3-200 chars) |
+| `model` | string | No | `mistral:latest` | Ollama model to use |
+| `max_turns` | integer | No | `5` | Max iteration rounds (1-10) |
+| `verbose` | boolean | No | `false` | Include detailed turn information |
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `request_id` | string | Unique request identifier (UUID) |
+| `input` | string | Original input description |
+| `final_slogan` | string | Generated slogan (if successful) |
+| `completion_reason` | string | `approved`, `max_turns_reached`, or `error` |
+| `turn_count` | integer | Number of iterations performed |
+| `error` | string | Error message (only if failed) |
+| `turns` | array | Turn-by-turn details (when `verbose=true`) |
+
+### Python Client Example
+
+```python
+import httpx
+
+# Generate slogan
+response = httpx.post(
+    "http://localhost:8000/api/v1/slogans/generate",
+    json={
+        "input": "coffee shop",
+        "model": "mistral:latest",
+        "max_turns": 5,
+        "verbose": True
+    },
+    timeout=630.0  # 10.5 minutes (matches API timeout)
+)
+
+result = response.json()
+print(f"Slogan: {result['final_slogan']}")
+print(f"Took {result['turn_count']} turns in {result['total_duration_seconds']:.1f}s")
+```
+
+### API Configuration
+
+Configure the API using environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `API_CORS_ORIGINS` | `http://localhost:3000,http://localhost:8080` | Comma-separated CORS origins |
+| `API_GENERATION_TIMEOUT` | `600` | Max generation time (seconds) |
+| `API_REQUEST_TIMEOUT` | `630` | Total request timeout (seconds) |
+| `API_LOG_LEVEL` | `WARNING` | Logging level (DEBUG, INFO, WARNING, ERROR) |
+| `API_MAX_CONCURRENT_REQUESTS` | `10` | Max simultaneous generations |
+
+**Example Configuration:**
+
+```bash
+# .env file
+API_CORS_ORIGINS=http://localhost:3000,https://myapp.com
+API_GENERATION_TIMEOUT=300
+API_LOG_LEVEL=INFO
+API_MAX_CONCURRENT_REQUESTS=5
+
+# Start with environment
+uvicorn src.api.main:app --env-file .env
+```
+
+### Error Responses
+
+All errors follow a consistent format and include the `X-Request-ID` header for tracking:
+
+**Validation Error (422):**
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "input"],
+      "msg": "String should have at least 3 characters",
+      "type": "string_too_short"
+    }
+  ]
+}
+```
+
+**HTTP Error (400, 404, 500):**
+
+```json
+{
+  "detail": "Model 'unknown' not found in Ollama",
+  "status_code": 400
+}
+```
+
+**Request ID Header:**
+
+Every response includes `X-Request-ID` for debugging:
+
+```bash
+curl -I http://localhost:8000/api/v1/health
+# X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
+```
+
 ## Configuration
 
 ### Environment Variables
