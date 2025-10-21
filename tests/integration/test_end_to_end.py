@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from orchestration.models import CompletionReason
-from orchestration.workflow import run_slogan_generation
+from src.orchestration.models import CompletionReason
+from src.orchestration.workflow import run_slogan_generation
 
 
 class TestEndToEndWorkflow:
@@ -22,8 +22,8 @@ class TestEndToEndWorkflow:
         mock_reviewer_response.text = "SHIP IT! This slogan is perfect."
 
         # Patch agent creation and run methods
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(return_value=mock_writer_response)
@@ -62,8 +62,8 @@ class TestEndToEndWorkflow:
             MagicMock(text="SHIP IT! Now it's great."),
         ]
 
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(side_effect=writer_responses)
@@ -92,8 +92,8 @@ class TestEndToEndWorkflow:
         mock_writer_response = MagicMock(text="Generic Slogan")
         mock_reviewer_response = MagicMock(text="Not good enough")
 
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(return_value=mock_writer_response)
@@ -119,9 +119,9 @@ class TestEndToEndWorkflow:
         mock_writer_response = MagicMock(text="Test Slogan")
         mock_reviewer_response = MagicMock(text="Ship it!")
 
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer, \
-             patch("orchestration.workflow.get_ollama_config") as mock_get_config:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer, \
+             patch("src.orchestration.workflow.get_ollama_config") as mock_get_config:
 
             # Mock config
             mock_config = MagicMock()
@@ -157,7 +157,7 @@ class TestEndToEndWorkflow:
     @pytest.mark.asyncio
     async def test_workflow_error_handling(self):
         """Test workflow handles errors gracefully."""
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer:
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(side_effect=Exception("Connection failed"))
             mock_create_writer.return_value = mock_writer
@@ -182,8 +182,8 @@ class TestEndToEndWorkflow:
             mock_writer_response = MagicMock(text="Test Slogan")
             mock_reviewer_response = MagicMock(text=approval_phrase)
 
-            with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-                 patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+            with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+                 patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
                 mock_writer = MagicMock()
                 mock_writer.run = AsyncMock(return_value=mock_writer_response)
@@ -218,8 +218,8 @@ class TestEndToEndWorkflow:
             else:
                 return MagicMock(text="SHIP IT!")
 
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(side_effect=writer_run_side_effect)
@@ -252,8 +252,8 @@ class TestEndToEndWorkflow:
         mock_reviewer_response = MagicMock(text="Try again")
 
         # Test with max_turns=1
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(return_value=mock_writer_response)
@@ -268,8 +268,8 @@ class TestEndToEndWorkflow:
             assert session.completion_reason == CompletionReason.MAX_TURNS
 
         # Test with max_turns=10
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(return_value=mock_writer_response)
@@ -289,8 +289,8 @@ class TestEndToEndWorkflow:
         mock_writer_response = MagicMock(text="Test Slogan")
         mock_reviewer_response = MagicMock(text="SHIP IT!")
 
-        with patch("orchestration.workflow.create_writer_agent") as mock_create_writer, \
-             patch("orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
+        with patch("src.orchestration.workflow.create_writer_agent") as mock_create_writer, \
+             patch("src.orchestration.workflow.create_reviewer_agent") as mock_create_reviewer:
 
             mock_writer = MagicMock()
             mock_writer.run = AsyncMock(return_value=mock_writer_response)

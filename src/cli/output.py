@@ -2,7 +2,7 @@
 
 import click
 
-from orchestration.models import CompletionReason, IterationSession
+from src.orchestration.models import CompletionReason, IterationSession
 
 
 def format_session_output(session: IterationSession, verbose: bool = False) -> str:
