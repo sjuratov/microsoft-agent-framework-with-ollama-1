@@ -1,11 +1,9 @@
-"""Unit tests for CLI output formatting."""
+"""Tests for CLI output formatting."""
 
 from datetime import datetime, timedelta
 
-import pytest
-
-from cli.output import format_session_output
-from orchestration.models import CompletionReason, IterationSession, Turn
+from src.cli.output import format_session_output
+from src.orchestration.models import CompletionReason, IterationSession, Turn
 
 
 class TestFormatSessionOutput:
@@ -17,9 +15,9 @@ class TestFormatSessionOutput:
             user_input="test product",
             model_name="llama3.2:latest",
         )
-        
+
         output = format_session_output(session)
-        
+
         assert "⚠️" in output
         assert "not completed" in output.lower()
 
@@ -35,9 +33,9 @@ class TestFormatSessionOutput:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=False)
-        
+
         # Check all major sections
         assert "🎯 SLOGAN GENERATION RESULTS" in output
         assert "✨ Final Slogan: Scale Smarter, Grow Faster" in output
@@ -61,9 +59,9 @@ class TestFormatSessionOutput:
                 approved=False,
             )
         session.complete(CompletionReason.MAX_TURNS)
-        
+
         output = format_session_output(session)
-        
+
         assert "⏱️" in output
         assert "Status: Max Turns" in output
         assert "Total iterations: 5" in output
@@ -76,9 +74,9 @@ class TestFormatSessionOutput:
         )
         session.add_turn(slogan="Test slogan", approved=False)
         session.complete(CompletionReason.ERROR)
-        
+
         output = format_session_output(session)
-        
+
         assert "❌" in output
         assert "Status: Error" in output
 
@@ -99,9 +97,9 @@ class TestFormatSessionOutput:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         # Check iteration details section
         assert "📝 Iteration Details:" in output
         assert "Turn 1" in output
@@ -127,9 +125,9 @@ class TestFormatSessionOutput:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=False)
-        
+
         # Should NOT contain iteration details
         assert "📝 Iteration Details:" not in output
         assert "Turn 1" not in output
@@ -148,9 +146,9 @@ class TestFormatSessionOutput:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         assert "Total iterations: 1" in output
         assert "Turn 1" in output
         assert "Brilliant: Shine Bright" in output
@@ -169,9 +167,9 @@ class TestFormatSessionOutput:
                 approved=False,
             )
         session.complete(CompletionReason.MAX_TURNS)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         assert "Total iterations: 10" in output
         assert "Turn 1" in output
         assert "Turn 10" in output
@@ -187,7 +185,7 @@ Consider these improvements:
 1. Add concrete benefits
 2. Use emotional language
 3. Keep it under 100 characters"""
-        
+
         session.add_turn(
             slogan="Generic Slogan",
             feedback=multiline_feedback,
@@ -198,9 +196,9 @@ Consider these improvements:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         # All feedback lines should be present
         assert "lacks specificity" in output
         assert "Consider these improvements" in output
@@ -218,9 +216,9 @@ Consider these improvements:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         assert "Perfect Slogan" in output
         assert "Feedback:" not in output
         assert "✅" in output
@@ -237,9 +235,9 @@ Consider these improvements:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session)
-        
+
         assert long_slogan in output
 
     def test_timing_information_displayed(self):
@@ -250,12 +248,12 @@ Consider these improvements:
         )
         session.add_turn(slogan="Test", approved=True)
         session.complete(CompletionReason.APPROVED)
-        
+
         # Ensure completed_at is set (it should be by complete())
         assert session.completed_at is not None
-        
+
         output = format_session_output(session)
-        
+
         assert "Duration:" in output
         assert "seconds" in output
 
@@ -265,7 +263,7 @@ Consider these improvements:
             user_input="test",
             model_name="test-model",
         )
-        
+
         # Add multiple turns with slight time differences
         base_time = datetime.now()
         for i in range(3):
@@ -277,11 +275,11 @@ Consider these improvements:
                 timestamp=base_time + timedelta(seconds=i * 2),
             )
             session.turns.append(turn)
-        
+
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session)
-        
+
         assert "Average per turn:" in output
         assert "seconds" in output
 
@@ -291,10 +289,10 @@ Consider these improvements:
             user_input="test",
             model_name="test-model",
         )
-        
+
         base_time = datetime.now()
         session.started_at = base_time
-        
+
         # Add turns with specific timestamps
         for i in range(2):
             turn = Turn(
@@ -305,11 +303,11 @@ Consider these improvements:
                 timestamp=base_time + timedelta(seconds=(i + 1) * 3),
             )
             session.turns.append(turn)
-        
+
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         # Should show timing for each turn
         assert "Turn 1" in output
         assert "Turn 2" in output
@@ -332,9 +330,9 @@ Consider these improvements:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         # Should show both approved and not approved indicators
         assert "✅ Yes" in output
         assert "❌ No" in output
@@ -347,9 +345,9 @@ Consider these improvements:
         )
         session.add_turn(slogan="Test", approved=True)
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session)
-        
+
         # Should have separator lines (60 equals signs)
         assert "=" * 60 in output
 
@@ -369,9 +367,9 @@ Consider these improvements:
             approved=True,
         )
         session.complete(CompletionReason.APPROVED)
-        
+
         output = format_session_output(session, verbose=True)
-        
+
         # Check for expected emojis
         assert "🎯" in output  # Header
         assert "✨" in output  # Final slogan
@@ -389,9 +387,9 @@ Consider these improvements:
         session.completion_reason = CompletionReason.ERROR
         session.completed_at = datetime.now()
         session.final_slogan = None
-        
+
         output = format_session_output(session)
-        
+
         assert "❌" in output
         assert "Status: Error" in output
         # Should not crash even with no turns

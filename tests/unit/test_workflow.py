@@ -2,9 +2,9 @@
 
 import pytest
 
-from orchestration.models import CompletionReason, IterationSession, Turn
-from orchestration.workflow import is_approved, should_continue_iteration
-from config.settings import OllamaConfig
+from src.config.settings import OllamaConfig
+from src.orchestration.models import CompletionReason, IterationSession, Turn
+from src.orchestration.workflow import is_approved, should_continue_iteration
 
 
 class TestIsApproved:

@@ -2,9 +2,9 @@
 
 import re
 
-from agents import create_reviewer_agent, create_writer_agent
-from config.settings import OllamaConfig, get_ollama_config
-from orchestration.models import CompletionReason, IterationSession
+from src.agents import create_reviewer_agent, create_writer_agent
+from src.config.settings import OllamaConfig, get_ollama_config
+from src.orchestration.models import CompletionReason, IterationSession
 
 
 def is_approved(reviewer_response: str) -> bool:

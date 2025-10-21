@@ -5,9 +5,9 @@ import sys
 
 import click
 
-from cli.output import format_session_output
-from config import get_available_models, get_ollama_config
-from orchestration import run_slogan_generation
+from src.cli.output import format_session_output
+from src.config import get_available_models, get_ollama_config
+from src.orchestration import run_slogan_generation
 
 
 @click.group()

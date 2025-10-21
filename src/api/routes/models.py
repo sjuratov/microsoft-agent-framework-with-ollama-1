@@ -13,16 +13,16 @@ router = APIRouter(prefix="/api/v1", tags=["models"])
 async def get_models(config: OllamaConfig = Depends(get_config)) -> ModelsResponse:
     """
     Get list of available Ollama models.
-    
+
     Returns information about all models available on the Ollama instance,
     including the default model configured for the application.
-    
+
     Args:
         config: Injected Ollama configuration
-    
+
     Returns:
         ModelsResponse with list of models, default model, and count
-    
+
     Raises:
         HTTPException: 503 if Ollama is unavailable
         HTTPException: 500 for other errors
@@ -30,7 +30,7 @@ async def get_models(config: OllamaConfig = Depends(get_config)) -> ModelsRespon
     try:
         # Get available models from Ollama API
         model_names = get_available_models(base_url=config.base_url, timeout=10)
-        
+
         # Convert to ModelInfo objects with display names
         models = [
             ModelInfo(
@@ -39,13 +39,13 @@ async def get_models(config: OllamaConfig = Depends(get_config)) -> ModelsRespon
             )
             for name in model_names
         ]
-        
+
         return ModelsResponse(
             models=models,
             default_model=config.model_name,
             count=len(models)
         )
-    
+
     except ConnectionError as e:
         raise HTTPException(
             status_code=503,
@@ -55,7 +55,7 @@ async def get_models(config: OllamaConfig = Depends(get_config)) -> ModelsRespon
                 "suggestion": "Ensure Ollama is running with 'ollama serve'"
             }
         ) from e
-    
+
     except Exception as e:
         raise HTTPException(
             status_code=500,

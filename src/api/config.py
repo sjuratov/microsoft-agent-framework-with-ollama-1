@@ -1,7 +1,6 @@
 """API-specific configuration settings."""
 
 import logging
-import os
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -60,13 +59,13 @@ class APIConfig(BaseSettings):
     def configure_logging(self) -> None:
         """Configure logging based on settings."""
         log_level = getattr(logging, self.log_level.upper(), logging.WARNING)
-        
+
         logging.basicConfig(
             level=log_level,
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
             datefmt="%Y-%m-%d %H:%M:%S",
         )
-        
+
         # Set specific loggers
         logging.getLogger("uvicorn").setLevel(log_level)
         logging.getLogger("fastapi").setLevel(log_level)

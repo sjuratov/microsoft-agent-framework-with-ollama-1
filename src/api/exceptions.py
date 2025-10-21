@@ -1,7 +1,6 @@
 """Global exception handlers for the API."""
 
 import logging
-from typing import Any
 
 from fastapi import Request
 from fastapi.exceptions import RequestValidationError
@@ -16,16 +15,16 @@ async def validation_exception_handler(
 ) -> JSONResponse:
     """
     Handle Pydantic validation errors with detailed error messages.
-    
+
     Args:
         request: The incoming request
         exc: The validation error
-    
+
     Returns:
         JSONResponse with validation error details
     """
     request_id = getattr(request.state, "request_id", None)
-    
+
     logger.warning(
         f"Validation error: {request.method} {request.url.path}",
         extra={
@@ -35,7 +34,7 @@ async def validation_exception_handler(
             "errors": exc.errors(),
         }
     )
-    
+
     return JSONResponse(
         status_code=422,
         content={"detail": exc.errors()},
@@ -48,16 +47,16 @@ async def http_exception_handler(
 ) -> JSONResponse:
     """
     Handle HTTP exceptions with consistent format.
-    
+
     Args:
         request: The incoming request
         exc: The HTTP exception
-    
+
     Returns:
         JSONResponse with error details
     """
     request_id = getattr(request.state, "request_id", None)
-    
+
     # Log based on status code severity
     if exc.status_code >= 500:
         logger.error(
@@ -81,7 +80,7 @@ async def http_exception_handler(
                 "detail": exc.detail,
             }
         )
-    
+
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail},
@@ -94,16 +93,16 @@ async def unhandled_exception_handler(
 ) -> JSONResponse:
     """
     Handle unexpected exceptions with generic error message.
-    
+
     Args:
         request: The incoming request
         exc: The unhandled exception
-    
+
     Returns:
         JSONResponse with generic error message
     """
     request_id = getattr(request.state, "request_id", None)
-    
+
     logger.error(
         f"Unhandled exception: {request.method} {request.url.path} - {str(exc)}",
         extra={
@@ -114,7 +113,7 @@ async def unhandled_exception_handler(
         },
         exc_info=True
     )
-    
+
     return JSONResponse(
         status_code=500,
         content={

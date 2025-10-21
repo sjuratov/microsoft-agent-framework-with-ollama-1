@@ -1,11 +1,12 @@
 """Health check endpoint."""
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
+import httpx
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
-import httpx
 
-from src.api.schemas.responses import HealthResponse, DependencyStatus
+from src.api.schemas.responses import DependencyStatus, HealthResponse
 
 router = APIRouter(prefix="/api/v1", tags=["monitoring"])
 
@@ -20,7 +21,7 @@ async def get_health() -> JSONResponse:
     health_data = HealthResponse(
         status="healthy" if ollama_status.connected else "degraded",
         version="1.0.0",
-        timestamp=datetime.now(timezone.utc),
+        timestamp=datetime.now(UTC),
         dependencies={"ollama": ollama_status},
     )
 

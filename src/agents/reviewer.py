@@ -3,7 +3,7 @@
 from agent_framework import ChatAgent
 from agent_framework.openai import OpenAIChatClient
 
-from config.settings import OllamaConfig
+from src.config.settings import OllamaConfig
 
 
 def create_reviewer_agent(config: OllamaConfig) -> ChatAgent:
