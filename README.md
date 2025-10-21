@@ -2,6 +2,54 @@
 
 Multi-agent CLI application for generating creative slogans through iterative Writer-Reviewer collaboration using Microsoft Agent Framework and Ollama.
 
+## Table of Contents
+
+- [Slogan Writer-Reviewer Agent System](#slogan-writer-reviewer-agent-system)
+  - [Table of Contents](#table-of-contents)
+  - [Overview](#overview)
+  - [Features](#features)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+    - [1. Install Ollama](#1-install-ollama)
+    - [2. Pull a Model](#2-pull-a-model)
+    - [3. Install the CLI](#3-install-the-cli)
+  - [Quick Start](#quick-start)
+    - [Basic Usage](#basic-usage)
+    - [Verbose Mode (See Iteration Process)](#verbose-mode-see-iteration-process)
+    - [Custom Model](#custom-model)
+    - [Custom Iteration Limit](#custom-iteration-limit)
+    - [Save to File](#save-to-file)
+  - [REST API](#rest-api)
+    - [Starting the API Server](#starting-the-api-server)
+    - [Interactive API Documentation](#interactive-api-documentation)
+    - [Generating OpenAPI Specification](#generating-openapi-specification)
+    - [API Endpoints](#api-endpoints)
+      - [Root Endpoint](#root-endpoint)
+      - [Health Check](#health-check)
+      - [List Available Models](#list-available-models)
+      - [Generate Slogan](#generate-slogan)
+    - [Python Client Example](#python-client-example)
+    - [API Configuration](#api-configuration)
+    - [Error Responses](#error-responses)
+    - [Running FastAPI Locally and Exposing to the Internet](#running-fastapi-locally-and-exposing-to-the-internet)
+      - [Local Development](#local-development)
+      - [Dev Tunnel Setup (Optional)](#dev-tunnel-setup-optional)
+  - [Configuration](#configuration)
+    - [Environment Variables](#environment-variables)
+    - [Configuration Commands](#configuration-commands)
+  - [Development](#development)
+    - [Setup Development Environment](#setup-development-environment)
+    - [Run Tests](#run-tests)
+    - [Code Quality](#code-quality)
+  - [Troubleshooting](#troubleshooting)
+    - [Ollama Connection Error](#ollama-connection-error)
+    - [Model Validation Errors (String Too Long)](#model-validation-errors-string-too-long)
+    - [Model Not Found](#model-not-found)
+    - [Slow Generation](#slow-generation)
+  - [Architecture](#architecture)
+  - [License](#license)
+  - [Contributing](#contributing)
+
 ## Overview
 
 This tool uses two AI agents to collaboratively create compelling slogans:
@@ -368,6 +416,83 @@ Every response includes `X-Request-ID` for debugging:
 curl -I http://localhost:8000/api/v1/health
 # X-Request-ID: 550e8400-e29b-41d4-a716-446655440000
 ```
+
+### Running FastAPI Locally and Exposing to the Internet
+
+#### Local Development
+
+To run the FastAPI server on your local machine:
+
+```bash
+# Development mode with auto-reload (recommended for development)
+uvicorn src.api.main:app --reload --host 0.0.0.0 --port 8000
+
+# Production mode (with multiple workers)
+uvicorn src.api.main:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
+The API will be accessible at:
+
+- **Local**: `http://localhost:8000`
+- **Network**: `http://<your-local-ip>:8000`
+
+#### Dev Tunnel Setup (Optional)
+
+For testing your local API from external sources or sharing with others, you can use Microsoft Dev Tunnels:
+
+1. **Authenticate with Dev Tunnels**:
+
+   ```bash
+   devtunnel user login
+   ```
+
+   *Logs you into the Dev Tunnels service using your Microsoft account*
+
+2. **Create a new tunnel**:
+
+   ```bash
+   devtunnel create -a
+   ```
+
+   *Creates a new tunnel with anonymous access enabled. Note the tunnel name from the output*
+
+3. **Create a port mapping**:
+
+   ```bash
+   devtunnel port create -p 8000
+   ```
+
+   *Maps port 8000 (the FastAPI default port) for the tunnel*
+
+4. **Start hosting the tunnel**:
+
+   ```bash
+   devtunnel host <tunnel-name>
+   ```
+
+   *Starts hosting the tunnel (replace `<tunnel-name>` with the name from step 2, e.g., `fancy-fog-6mp2hnq.euw`)*
+
+5. **Start your FastAPI server** (in a separate terminal):
+
+   ```bash
+   uvicorn src.api.main:app --reload
+   ```
+
+After completing these steps, you'll receive a public URL (e.g., `https://f61krm0p-8000.euw.devtunnels.ms`) that routes to your local API, allowing external testing and integration.
+
+**Testing the public URL:**
+
+```bash
+# Test health endpoint
+curl https://<your-tunnel-url>.devtunnels.ms/api/v1/health
+
+# Generate a slogan via public URL
+curl -X POST https://<your-tunnel-url>.devtunnels.ms/api/v1/slogans/generate \
+  -H "Content-Type: application/json" \
+  -d '{"input": "coffee shop", "max_turns": 5}'
+```
+
+**Note**: Dev Tunnels are ideal for development and testing. For production deployments, consider using proper hosting solutions like Azure App Service, AWS, or other cloud platforms.
 
 ## Configuration
 
