@@ -19,8 +19,8 @@ class APIConfig(BaseSettings):
 
     # CORS settings
     cors_origins: str = Field(
-        default="http://localhost:3000,http://localhost:8080",
-        description="Comma-separated list of allowed CORS origins",
+        default="*",  # Allow all origins (development only)
+        description="Comma-separated list of allowed CORS origins, or '*' to allow all",
     )
 
     # Timeout settings (in seconds)
@@ -54,6 +54,8 @@ class APIConfig(BaseSettings):
     @property
     def cors_origins_list(self) -> list[str]:
         """Parse CORS origins string into list."""
+        if self.cors_origins == "*":
+            return ["*"]
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
 
     def configure_logging(self) -> None:

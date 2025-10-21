@@ -25,13 +25,24 @@ app = FastAPI(
 )
 
 # Configure CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=config.cors_origins_list,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Note: When allow_credentials=True, we can't use allow_origins=["*"]
+# Instead, use allow_origin_regex to match all origins
+if config.cors_origins_list == ["*"]:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex="https?://.*",  # Match any origin (http or https)
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+else:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=config.cors_origins_list,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 # Add request logging middleware
 app.add_middleware(RequestLoggingMiddleware)
