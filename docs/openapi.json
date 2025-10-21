@@ -1,0 +1,444 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Slogan Writer-Reviewer API",
+        "description": "Multi-agent slogan generation via Writer-Reviewer collaboration",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/health": {
+            "get": {
+                "tags": [
+                    "monitoring"
+                ],
+                "summary": "Get Health",
+                "description": "Check API and dependency health status.",
+                "operationId": "get_health_api_v1_health_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/models": {
+            "get": {
+                "tags": [
+                    "models"
+                ],
+                "summary": "Get Models",
+                "description": "Get list of available Ollama models.\n\nReturns information about all models available on the Ollama instance,\nincluding the default model configured for the application.\n\nArgs:\n    config: Injected Ollama configuration\n\nReturns:\n    ModelsResponse with list of models, default model, and count\n\nRaises:\n    HTTPException: 503 if Ollama is unavailable\n    HTTPException: 500 for other errors",
+                "operationId": "get_models_api_v1_models_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ModelsResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/slogans/generate": {
+            "post": {
+                "tags": [
+                    "slogans"
+                ],
+                "summary": "Generate Slogan",
+                "description": "Generate a slogan through Writer-Reviewer collaboration.\n\nThis endpoint orchestrates the multi-agent slogan generation workflow,\nwhere a Writer agent creates slogans and a Reviewer agent provides feedback\nuntil an acceptable slogan is approved or max iterations reached.\n\nArgs:\n    request_body: Generation request with input, optional model, max_turns, verbose\n    request: FastAPI request object (for accessing request_id from middleware)\n    config: Injected Ollama configuration\n\nReturns:\n    GenerateResponse with final slogan and metadata\n\nRaises:\n    HTTPException 400: Invalid model specified\n    HTTPException 422: Validation error (handled by FastAPI)\n    HTTPException 500: Generation error\n    HTTPException 504: Generation timeout (>600s)",
+                "operationId": "generate_slogan_api_v1_slogans_generate_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GenerateRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GenerateResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/": {
+            "get": {
+                "tags": [
+                    "info"
+                ],
+                "summary": "Get Root",
+                "description": "Get API information and documentation links.",
+                "operationId": "get_root__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RootResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "GenerateRequest": {
+                "properties": {
+                    "input": {
+                        "type": "string",
+                        "maxLength": 500,
+                        "minLength": 1,
+                        "title": "Input",
+                        "description": "Product/topic description for slogan generation"
+                    },
+                    "model": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Model",
+                        "description": "Ollama model name (optional, uses default if not specified)"
+                    },
+                    "max_turns": {
+                        "anyOf": [
+                            {
+                                "type": "integer",
+                                "maximum": 10.0,
+                                "minimum": 1.0
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Max Turns",
+                        "description": "Maximum iteration turns (optional)"
+                    },
+                    "verbose": {
+                        "type": "boolean",
+                        "title": "Verbose",
+                        "description": "Include all iteration turns in response (optional)",
+                        "default": false
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "input"
+                ],
+                "title": "GenerateRequest",
+                "description": "Request schema for slogan generation endpoint."
+            },
+            "GenerateResponse": {
+                "properties": {
+                    "slogan": {
+                        "type": "string",
+                        "title": "Slogan",
+                        "description": "Final approved slogan"
+                    },
+                    "input": {
+                        "type": "string",
+                        "title": "Input",
+                        "description": "Original user input"
+                    },
+                    "completion_reason": {
+                        "type": "string",
+                        "enum": [
+                            "approved",
+                            "max_turns",
+                            "error"
+                        ],
+                        "title": "Completion Reason",
+                        "description": "Reason for generation completion"
+                    },
+                    "turn_count": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "Turn Count",
+                        "description": "Number of iterations performed"
+                    },
+                    "model_name": {
+                        "type": "string",
+                        "title": "Model Name",
+                        "description": "Model used for generation"
+                    },
+                    "total_duration_seconds": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "title": "Total Duration Seconds",
+                        "description": "Total generation time in seconds"
+                    },
+                    "average_duration_per_turn": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "title": "Average Duration Per Turn",
+                        "description": "Average time per iteration"
+                    },
+                    "turns": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/TurnDetail"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Turns",
+                        "description": "Iteration history (only if verbose=true)"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created At",
+                        "description": "Request timestamp"
+                    },
+                    "request_id": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "uuid"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Request Id",
+                        "description": "Request identifier (UUID v4)"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "slogan",
+                    "input",
+                    "completion_reason",
+                    "turn_count",
+                    "model_name",
+                    "total_duration_seconds",
+                    "average_duration_per_turn",
+                    "created_at"
+                ],
+                "title": "GenerateResponse",
+                "description": "Response schema for slogan generation endpoint."
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "ModelInfo": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "Model name"
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "title": "Display Name",
+                        "description": "Human-readable model name"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "display_name"
+                ],
+                "title": "ModelInfo",
+                "description": "Information about an available model."
+            },
+            "ModelsResponse": {
+                "properties": {
+                    "models": {
+                        "items": {
+                            "$ref": "#/components/schemas/ModelInfo"
+                        },
+                        "type": "array",
+                        "title": "Models",
+                        "description": "List of available models"
+                    },
+                    "default_model": {
+                        "type": "string",
+                        "title": "Default Model",
+                        "description": "The default model name"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0.0,
+                        "title": "Count",
+                        "description": "Total number of available models"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "models",
+                    "default_model",
+                    "count"
+                ],
+                "title": "ModelsResponse",
+                "description": "Response schema for models endpoint."
+            },
+            "RootResponse": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "title": "Name",
+                        "description": "API name"
+                    },
+                    "version": {
+                        "type": "string",
+                        "title": "Version",
+                        "description": "API version (semver)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "title": "Description",
+                        "description": "API description"
+                    },
+                    "documentation": {
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "type": "object",
+                        "title": "Documentation",
+                        "description": "Documentation links"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "version",
+                    "description",
+                    "documentation"
+                ],
+                "title": "RootResponse",
+                "description": "Response schema for root endpoint."
+            },
+            "TurnDetail": {
+                "properties": {
+                    "turn_number": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "Turn Number",
+                        "description": "Iteration number (1-indexed)"
+                    },
+                    "slogan": {
+                        "type": "string",
+                        "title": "Slogan",
+                        "description": "Slogan proposed in this turn"
+                    },
+                    "feedback": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Feedback",
+                        "description": "Reviewer feedback (null if approved)"
+                    },
+                    "approved": {
+                        "type": "boolean",
+                        "title": "Approved",
+                        "description": "Whether slogan was approved"
+                    },
+                    "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Timestamp",
+                        "description": "Turn timestamp"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "turn_number",
+                    "slogan",
+                    "approved",
+                    "timestamp"
+                ],
+                "title": "TurnDetail",
+                "description": "Details of a single iteration turn (for verbose mode)."
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

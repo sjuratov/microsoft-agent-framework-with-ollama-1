@@ -165,6 +165,25 @@ The API will be available at `http://localhost:8000`.
 - **ReDoc**: <http://localhost:8000/redoc>
 - **OpenAPI Schema**: <http://localhost:8000/openapi.json>
 
+### Generating OpenAPI Specification
+
+You can export the OpenAPI specification to use with frontend generators, API clients, or documentation tools:
+
+```bash
+# Start the API server first
+uvicorn src.api.main:app --reload
+
+# In another terminal, export the OpenAPI spec
+curl http://localhost:8000/openapi.json > docs/openapi.json
+```
+
+The generated `docs/openapi.json` file contains the complete API specification and can be used with:
+
+- **Frontend generators**: GitHub Spark, Swagger Codegen, OpenAPI Generator
+- **API clients**: Postman, Insomnia, Bruno
+- **Documentation tools**: Stoplight, ReadMe, Redocly
+- **Code generation**: TypeScript types, Python clients, etc.
+
 ### API Endpoints
 
 #### Root Endpoint
