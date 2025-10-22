@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Background circle -->
+  <circle cx="50" cy="50" r="48" fill="#673ab7" stroke="#512da8" stroke-width="2"/>
+  
+  <!-- Writer icon (pencil) on left -->
+  <g transform="translate(20, 40)">
+    <path d="M2 20 L8 8 L10 10 L4 22 Z" fill="#ffc107" stroke="#ff6f00" stroke-width="1"/>
+    <circle cx="9" cy="9" r="2" fill="#ff6f00"/>
+    <line x1="2" y1="20" x2="0" y2="24" stroke="#ff6f00" stroke-width="1.5"/>
+  </g>
+  
+  <!-- Reviewer icon (checkmark) on right -->
+  <g transform="translate(60, 40)">
+    <circle cx="8" cy="8" r="8" fill="#4caf50" stroke="#2e7d32" stroke-width="1.5"/>
+    <path d="M4 8 L7 11 L12 5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Connecting arrow -->
+  <path d="M38 50 L62 50" stroke="#ffc107" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 6 3, 0 6" fill="#ffc107"/>
+    </marker>
+  </defs>
+  
+  <!-- Letter "S" in center -->
+  <text x="50" y="75" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="white" text-anchor="middle">S</text>
+</svg>

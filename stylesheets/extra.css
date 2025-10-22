@@ -1,0 +1,292 @@
+/* Custom CSS for Slogan Writer-Reviewer Documentation */
+
+/* ===== Color Enhancements ===== */
+
+/* Enhance code blocks with subtle background */
+.highlight {
+  border-radius: 0.4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style inline code */
+code {
+  padding: 0.1em 0.3em;
+  border-radius: 0.2rem;
+  background-color: rgba(128, 128, 128, 0.15);
+  font-size: 0.95em;
+}
+
+/* ===== Admonition Customization ===== */
+
+/* Enhanced admonition styling */
+.admonition {
+  border-left: 4px solid;
+  border-radius: 0.4rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin: 1.5em 0;
+}
+
+/* Tip admonitions with custom color */
+.admonition.tip {
+  border-left-color: #00c853;
+}
+
+/* Warning admonitions */
+.admonition.warning {
+  border-left-color: #ff9800;
+}
+
+/* Note admonitions */
+.admonition.note {
+  border-left-color: #2196f3;
+}
+
+/* ===== Table Enhancements ===== */
+
+/* Better table styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.5em 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 0.4rem;
+  overflow: hidden;
+}
+
+/* Table header styling */
+table thead th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85em;
+  letter-spacing: 0.05em;
+}
+
+/* Zebra striping for table rows */
+table tbody tr:nth-child(odd) {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+/* Table hover effect */
+table tbody tr:hover {
+  background-color: rgba(128, 128, 128, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+/* ===== Navigation Enhancements ===== */
+
+/* Sticky navigation tabs with shadow */
+.md-tabs {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Active navigation item highlight */
+.md-nav__link--active {
+  font-weight: 600;
+}
+
+/* ===== Content Enhancements ===== */
+
+/* Improve heading spacing */
+.md-content h1 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.md-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(128, 128, 128, 0.2);
+  padding-bottom: 0.3rem;
+}
+
+.md-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+/* ===== Button Styling ===== */
+
+/* Primary buttons (like in cards) */
+.md-button--primary {
+  border-radius: 0.3rem;
+  padding: 0.6em 1.2em;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.md-button--primary:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ===== Feature Grid (for landing page) ===== */
+
+/* Grid container for feature cards */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+/* Individual feature card */
+.feature-card {
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  background: linear-gradient(135deg, rgba(128, 128, 128, 0.05) 0%, rgba(128, 128, 128, 0.02) 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--md-accent-fg-color);
+}
+
+.feature-card h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--md-accent-fg-color);
+  font-size: 1.2em;
+}
+
+/* Feature card icons */
+.feature-card .icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--md-accent-fg-color);
+}
+
+/* ===== Code Copy Button Enhancement ===== */
+
+/* Style the copy button */
+.md-clipboard {
+  border-radius: 0.3rem;
+}
+
+.md-clipboard:hover {
+  background-color: rgba(128, 128, 128, 0.2);
+}
+
+/* ===== Responsive Typography ===== */
+
+/* Better line height for readability */
+.md-content {
+  line-height: 1.7;
+}
+
+.md-content p {
+  margin-bottom: 1rem;
+}
+
+/* Code blocks line height */
+.md-content pre code {
+  line-height: 1.5;
+}
+
+/* ===== Search Highlight ===== */
+
+/* Highlighted search results */
+[data-md-component="search-result"] mark {
+  background-color: var(--md-accent-fg-color);
+  color: white;
+  padding: 0.1em 0.2em;
+  border-radius: 0.2rem;
+}
+
+/* ===== Footer Customization ===== */
+
+/* Footer styling */
+.md-footer {
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+/* ===== Accessibility Enhancements ===== */
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--md-accent-fg-color);
+  outline-offset: 2px;
+  border-radius: 0.2rem;
+}
+
+/* ===== Dark Mode Specific Adjustments ===== */
+
+[data-md-color-scheme="slate"] {
+  /* Darker code blocks in dark mode */
+  --md-code-bg-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-md-color-scheme="slate"] .highlight {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+[data-md-color-scheme="slate"] table {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Print Styles ===== */
+
+@media print {
+  /* Hide navigation when printing */
+  .md-header,
+  .md-tabs,
+  .md-sidebar,
+  .md-footer {
+    display: none !important;
+  }
+  
+  /* Full width content for printing */
+  .md-content {
+    max-width: 100%;
+  }
+  
+  /* Prevent page breaks inside code blocks */
+  pre {
+    page-break-inside: avoid;
+  }
+}
+
+/* ===== Mobile Responsive Adjustments ===== */
+
+@media screen and (max-width: 768px) {
+  /* Smaller feature cards on mobile */
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* Adjust heading sizes on mobile */
+  .md-content h1 {
+    font-size: 1.8em;
+  }
+  
+  .md-content h2 {
+    font-size: 1.5em;
+  }
+}
+
+/* ===== Animation for Page Load ===== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.md-content article {
+  animation: fadeIn 0.4s ease-out;
+}
