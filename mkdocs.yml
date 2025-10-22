@@ -1,13 +1,13 @@
 site_name: Slogan Writer-Reviewer Agent System
 site_description: Multi-agent CLI application for generating creative slogans through iterative Writer-Reviewer collaboration using Microsoft Agent Framework and Ollama
-site_author: Your Name
-site_url: https://yourusername.github.io/microsoft-agent-framework-with-ollama-1/
-repo_url: https://github.com/yourusername/microsoft-agent-framework-with-ollama-1
+site_author: Sasa Juratovic
+site_url: https://sjuratov.github.io/microsoft-agent-framework-with-ollama-1/
+repo_url: https://github.com/sjuratov/microsoft-agent-framework-with-ollama-1
 repo_name: GitHub
 edit_uri: edit/main/docs/
 
 # Copyright notice in footer
-copyright: Copyright &copy; 2025 Your Name
+copyright: Copyright &copy; 2025 Sasa Juratovic. All rights reserved.
 
 theme:
   name: material
@@ -175,13 +175,13 @@ extra:
   # Social links in footer
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/yourusername/microsoft-agent-framework-with-ollama-1
+      link: https://github.com/sjuratov/microsoft-agent-framework-with-ollama-1
       name: GitHub Repository
     - icon: fontawesome/brands/python
       link: https://www.python.org/
       name: Built with Python
     - icon: fontawesome/solid/book
-      link: https://microsoft.github.io/autogen/
+      link: https://learn.microsoft.com/en-us/agent-framework/overview/agent-framework-overview
       name: Microsoft Agent Framework
   
   # Analytics (optional - add your tracking ID)
