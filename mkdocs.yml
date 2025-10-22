@@ -1,0 +1,203 @@
+site_name: Slogan Writer-Reviewer Agent System
+site_description: Multi-agent CLI application for generating creative slogans through iterative Writer-Reviewer collaboration using Microsoft Agent Framework and Ollama
+site_author: Your Name
+site_url: https://yourusername.github.io/microsoft-agent-framework-with-ollama-1/
+repo_url: https://github.com/yourusername/microsoft-agent-framework-with-ollama-1
+repo_name: GitHub
+edit_uri: edit/main/docs/
+
+# Copyright notice in footer
+copyright: Copyright &copy; 2025 Your Name
+
+theme:
+  name: material
+  language: en
+  
+  # Logo and favicon
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  
+  # Color scheme
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  # Font configuration
+  font:
+    text: Roboto
+    code: Roboto Mono
+  
+  # Navigation and UI features
+  features:
+    # Navigation
+    - navigation.instant      # Instant loading (XHR)
+    - navigation.instant.progress  # Progress indicator
+    - navigation.tracking     # Anchor tracking
+    - navigation.tabs         # Top-level sections as tabs
+    - navigation.tabs.sticky  # Tabs remain visible on scroll
+    - navigation.sections     # Group navigation items
+    - navigation.expand       # Expand all sections by default
+    - navigation.path         # Show breadcrumbs
+    - navigation.indexes      # Allow section index pages
+    - navigation.top          # Back to top button
+    - navigation.footer       # Previous/next links in footer
+    
+    # Table of contents
+    - toc.follow              # Sidebar follows scroll
+    - toc.integrate           # Integrate TOC into navigation (optional)
+    
+    # Search
+    - search.suggest          # Search suggestions
+    - search.highlight        # Highlight search terms
+    - search.share            # Share search results
+    
+    # Code blocks
+    - content.code.copy       # Copy button for code blocks
+    - content.code.annotate   # Annotations in code blocks
+    - content.code.select     # Select code lines
+    
+    # Content
+    - content.tabs.link       # Link content tabs
+    - content.tooltips        # Improved tooltips
+    - content.action.edit     # Edit button on pages
+    - content.action.view     # View source button
+  
+  # Repository icon
+  icon:
+    repo: fontawesome/brands/github
+    edit: material/pencil
+    view: material/eye
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            separate_signature: true
+            merge_init_into_class: true
+
+markdown_extensions:
+  # Code highlighting
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  
+  # Content tabs
+  - pymdownx.tabbed:
+      alternate_style: true
+  
+  # Admonitions and details
+  - pymdownx.details
+  - admonition
+  
+  # Icons and emojis (FIXES THE ICON DISPLAY)
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  
+  # Attributes and HTML
+  - attr_list
+  - md_in_html
+  
+  # Tables and lists
+  - tables
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  
+  # Keys and other formatting
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
+  
+  # Table of contents
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+# Custom CSS
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - Guides:
+      - CLI Usage: guides/cli-usage.md
+      - API Usage: guides/api-usage.md
+      - API Clients: guides/api-clients.md
+      - Development: guides/development.md
+  - API Reference:
+      - Agents: api-reference/agents.md
+      - Orchestration: api-reference/orchestration.md
+      - CLI: api-reference/cli.md
+      - Config: api-reference/config.md
+      - REST API: api-reference/rest-api.md
+      - OpenAPI Spec: api-reference/openapi.md
+  - Architecture:
+      - Overview: architecture/overview.md
+      - Agents: architecture/agents.md
+      - Workflow: architecture/workflow.md
+  - Specifications: specs/index.md
+  - Troubleshooting: troubleshooting.md
+
+extra:
+  # Social links in footer
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/yourusername/microsoft-agent-framework-with-ollama-1
+      name: GitHub Repository
+    - icon: fontawesome/brands/python
+      link: https://www.python.org/
+      name: Built with Python
+    - icon: fontawesome/solid/book
+      link: https://microsoft.github.io/autogen/
+      name: Microsoft Agent Framework
+  
+  # Analytics (optional - add your tracking ID)
+  # analytics:
+  #   provider: google
+  #   property: G-XXXXXXXXXX
+  
+  # Version selector (for multi-version docs)
+  # version:
+  #   provider: mike
+  
+  # Alternate languages (if needed)
+  # alternate:
+  #   - name: English
+  #     link: /en/
+  #     lang: en
+  
+  # Generator notice
+  generator: true
